@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h6>Browse Purchases</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-light table-sm table-hover table-striped">
+
+                <thead class="custom-table-header">
+                    <tr>
+                        <th>Code</th>
+                        <th>Item</th>
+                        <th>Vendor</th>
+                        <th>Base Price</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Customer</th>
+                        <th>Date/Time</th>
+                        <th>Requires Sync</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in purchases %}
+                    <tr class="custom-table-row">
+                        <td>{{ purchase.salesitem_code }}</td>
+                        <td>{{ purchase.salesitem_name }}</td>
+                        <td>{{ purchase.salesitem_vendor_name }}</td>
+                        <td>{{ purchase.salesitem_base_price }}</td>
+                        <td>{{ purchase.quantity }}</td>
+                        <td>{{ '%.2f'|format(purchase.total_price) }}</td>
+                        <td>{{ purchase.customer.given_name + " " + purchase.customer.surname}}
+                        <td>{{ purchase.purchase_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ 'Yes' if purchase.requires_sync else ' ' }}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination controls -->
+        {% if pagination %}
+        <nav>
+            <ul class="pagination pagination-sm custom-pagination">
+                {% for page in pagination.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item{% if page == pagination.page %} active{% endif %}">
+                            <a class="page-link" href="{{ url_for('main.purchase_view', page=page) }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">â€¦</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

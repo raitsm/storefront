@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>STOREFRONT</h4>
+                    <h6>Part of MallDepot Family</h6>
+                </div>
+                <div class="card-body">
+                    <h5>For support contact:</h5>
+                    <p>Phone: +371-YOU-KNOW</p>
+                    <p>E-mail: <a href="mailto:not_so_important@lv">not_so_important@lv</a></p>
+                    
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

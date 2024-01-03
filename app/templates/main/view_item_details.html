@@ -1,0 +1,11 @@
+<!-- view_item_details.html -->
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <!-- Display item details here -->
+    <p>Item Name: {{ item.name }}</p>
+    <!-- ... other item details ... -->
+    <button onclick="window.location.href='{{ url_for('main.items_list') }}'">OK</button>
+    <button onclick="window.location.href='{{ url_for('main.items_list') }}'">Cancel</button>
+</div>
+{% endblock %}

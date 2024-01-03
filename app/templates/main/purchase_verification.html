@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    Purchase Verification
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{{ url_for('main.finalize_purchase', item_id=item.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <div class="row mb-3">
+                            <label class="col-sm-4">Item Code:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext">{{ item.code }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4">Item Name:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext">{{ item.name }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4">Vendor:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext">{{ item.vendor_name }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4">Price per Unit:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext">{{ '%.2f'|format(item.price_per_unit) }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4">Quantity:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext">{{ quantity }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-4">Total Price:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext">{{ '%.2f'|format(total_price) }}</p>
+                            </div>
+                        </div>
+                        <input type="hidden" name="quantity" value="{{ quantity }}">
+                        <div class="row mb-3">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary" onclick="return confirmFinalizePurchase()">Finalize Purchase</button>
+                                <button type="button" class="btn btn-secondary" onclick="confirmCancelPurchase()">Cancel Purchase</button>
+                                <button type="button" class="btn btn-secondary" onclick="confirmCancelVerification({{ item.id }})">Adjust Quantity</button>
+<!--                                 <a href="{{ url_for('main.item_details', item_id=item.id) }}" class="btn btn-secondary">Cancel</a> -->
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

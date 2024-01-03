@@ -1,0 +1,48 @@
+{# view item details and purchase items #}
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    Item Details
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text"><strong>Code:</strong> {{ item.code }}</p>
+                    <p class="card-text"><strong>Description:</strong> {{ item.description }}</p>
+                    <p class="card-text"><strong>Vendor:</strong> {{ item.vendor_name }}</p>
+                    <p class="card-text"><strong>Price per Unit:</strong> {{ '%.2f'|format(item.price_per_unit) }}</p>
+                    <p class="card-text"><strong>Items in Stock:</strong> {{ item.units_in_stock }}</p>
+
+                    {% if current_user.is_customer() %}
+                        <form action="{{ url_for('main.purchase_item', item_id=item.id) }}" method="post">
+                            {{ form.hidden_tag() }}
+                            <div class="mb-3">
+                                {{ form.quantity.label }} {{ form.quantity }}
+                            </div>
+                            {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+                            {% if messages %}
+                            <div class="alert alert-danger" role="alert">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                            <button type="submit" class="btn btn-primary">Buy</button>
+                            <button type="button" class="btn btn-secondary" onclick="confirmCancelPurchase()">Cancel</button>
+                        </form>
+                    {% elif current_user.is_sales_manager() or current_user.is_read_only() or current_user.is_admin() %}
+                        <p class="card-text"><strong>Units Purchased:</strong> {{ item.units_purchased }}</p>
+                        <a href="{{ url_for('main.index') }}" class="btn btn-primary">OK</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

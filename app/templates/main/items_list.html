@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h6>Choose &amp; Buy</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-light table-sm table-hover table-striped">
+
+                <thead class="custom-table-header">
+                    <tr>
+                        <th>Code</th>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Available</th>
+                        <th>Vendor</th>
+                        <th>Actions</th>  <!-- Adjusted -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <!-- <tr class="custom-table-row" ondblclick="window.location='{{ url_for('main.purchase_item', item_id=item.id) }}'"> -->
+<!--                    <tr class="custom-table-row" ondblclick="window.location='{{ url_for('main.purchase_item', item_id=item.id) if not current_user.is_authenticated or (current_user.is_authenticated and current_user.is_customer()) else url_for('main.item_details', item_id=item.id) }}'"> <tr class="custom-table-row" ondblclick="window.location='{{ url_for('auth.login', next=url_for('main.purchase_item', item_id=item.id)) if not current_user.is_authenticated else (url_for('main.purchase_item', item_id=item.id) if current_user.is_customer() else url_for('main.item_details', item_id=item.id)) }}'" -->
+
+                    <tr class="custom-table-row" ondblclick="window.location='{{ url_for('auth.login', next=url_for('main.purchase_item', item_id=item.id)) if not current_user.is_authenticated else (url_for('main.purchase_item', item_id=item.id) if current_user.is_customer() else url_for('main.item_details', item_id=item.id)) }}'">
+                       
+                        <td>{{ item.code }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ '%.2f'|format(item.price_per_unit) }}</td> <!--  * item.sales_margin -->
+                        <td>{{ item.units_in_stock }}</td>  
+                        <td>{{ item.vendor_name }}</td>
+                        <td>
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.is_customer() %}
+                                    <a href="{{ url_for('main.purchase_item', item_id=item.id) }}" class="btn btn-sm btn-primary">Buy</a>
+                                {% else %}
+                                    <a href="{{ url_for('main.item_details', item_id=item.id) }}" class="btn btn-sm btn-primary">View</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ url_for('auth.login', next=url_for('main.purchase_item', item_id=item.id)) }}" class="btn btn-sm btn-primary">Login & Buy</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination controls -->
+        {% if pagination %}
+        <nav>
+            <ul class="pagination pagination-sm custom-pagination">
+                {% for page in pagination.iter_pages() %}
+                    {% if page %}
+                        <li class="page-item{% if page == pagination.page %} active{% endif %}">
+                            <a class="page-link" href="{{ url_for('main.index', page=page) }}">{{ page }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

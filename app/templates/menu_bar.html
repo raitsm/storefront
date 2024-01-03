@@ -1,0 +1,71 @@
+<nav class="navbar custom-navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand brand-logo-fonts" href="{{ url_for('main.index') }}">STOREFRONT</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin() %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Users
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="{{ url_for('users.view_users') }}">View Users</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('users.add_user') }}">Add User</a></li>
+                            </ul>
+                        </li>
+                    {% endif %} <!-- Closing if for is_admin check -->
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('users.change_password') }}">Change Password</a></li>
+
+                    {% if current_user.is_sales_manager() or current_user.is_read_only() %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Store management
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                {% if current_user.is_sales_manager() or current_user.is_read_only() %}
+                                    <li><a class="dropdown-item" href="{{ url_for('main.index') }}">Browse Stock</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('main.purchase_view') }}">Browse Purchase History</a></li>
+                                {% endif %} <!-- Closing if for is_sales_manager or is_read_only check -->
+                            </ul>
+                        </li>
+
+                    {% endif %} <!-- end of is_sales_manager or is_read_only block -->
+
+                    {% if current_user.is_admin() or current_user.is_sales_manager() %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sync
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="{{ url_for('sync.browse_session_history') }}">Sync History</a></li>
+                                {% if current_user.is_admin() %}
+                                        <li><a class="dropdown-item" href="{{ url_for('sync.add_token_view') }}">Add Connection Token</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('sync.view_edit_tokens_view') }}">View/Manage Connection Tokens</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="confirmLogout()">Logout</a></li>
+                <!--    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li> -->
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                    
+                {% endif %} <!-- end of is_authenticated block -->
+            </ul>
+
+            <!-- Align to the right of the navbar -->
+            <ul class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="navbar-text">Logged in as <strong>{{ current_user.username }}</strong></span>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <span class="navbar-text"><strong>Not logged in</strong></span>
+                    </li>
+                {% endif %} <!-- Closing if for is_authenticated check -->
+            </ul>
+        </div>
+    </div>
+</nav>

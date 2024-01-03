@@ -1,0 +1,47 @@
+{% extends "sync/token_form.html" %}
+
+{% block priority_fields %}
+<div class="form-group row mb-3">
+    {{ form.connection_name.label(class="col-sm-6 col-form-label fs-14") }}
+    <div class="col-sm-6">
+        {{ form.connection_name(class="form-control fs-12") }}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block additional_fields %}
+<div class="form-group row mb-3">
+    {{ form.expires_at.label(class="col-sm-6 col-form-label fs-14") }}
+    <div class="col-sm-6">
+        {{ form.expires_at(class="form-control fs-12") }}
+    </div>
+</div>
+{% if form.expires_at.errors %}
+<div class="alert alert-danger col-12 fs-12 mt-2">
+    {% for error in form.expires_at.errors %}
+        <span>{{ error }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
+<script>
+    {% if token_added %}
+        alert('Token added successfully.');
+        window.location.href = "{{ url_for('sync.view_edit_tokens_view') }}";
+    {% endif %}
+</script>
+
+<script>
+    {% if not token_added %}
+        {% for error in validation_errors %}
+            alert('{{ error }}');
+        {% endfor %}
+    {% endif %}
+</script>
+
+{% endblock %}
+
+{% block additional_buttons %}
+<!--     <button type="submit" class="btn btn-ok mt-3" name="submit_add_next" value="add_next">Save & Add Next</button> -->
+{% endblock %}
